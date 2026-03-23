@@ -1,0 +1,8 @@
+# Ignore the large IMDB dataset
+data/aclImdb/
+
+# Ignore Python cache and environment files
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
