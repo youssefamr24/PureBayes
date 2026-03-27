@@ -1,5 +1,7 @@
 # Ignore the large IMDB dataset
 data/aclImdb/
+data/abalone.csv
+data/abalone.zip
 
 # Ignore Python cache and environment files
 __pycache__/

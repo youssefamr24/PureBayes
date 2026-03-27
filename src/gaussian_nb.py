@@ -4,14 +4,12 @@ import math
 from sklearn.metrics import confusion_matrix
 from utils import computeMean, computeCovariance, computeAccuracy
 
-
 # Load the dataset
 def load_clean_data(file_path):
     df = pd.read_csv(file_path)
 
-    df = df.drop(columns=["Sex"])
+    df = df.drop(columns=['Sex'])
     return df
-
 
 # Transforming the target variable 'Rings' into categorical age groups (Young, Adult, Old)
 def transform_target(df):
@@ -19,21 +17,20 @@ def transform_target(df):
     # Converting Rings to Age classes
     def get_age_group(rings):
         if rings <= 8:
-            return "Young"
+            return 'Young'
         elif 9 <= rings <= 11:
-            return "Adult"
+            return 'Adult'
         else:
-            return "Old"
-
+            return 'Old'
+        
     # The new categorical column is added
-    df["AgeGroup"] = df["Rings"].apply(get_age_group)
+    df['AgeGroup'] = df['Rings'].apply(get_age_group)
 
-    # The original 'Rings' column is dropped
-    df = df.drop(columns=["Rings"])
+    # The original 'Rings' column is dropped 
+    df = df.drop(columns=['Rings'])
 
     return df
-
-
+    
 # Splitting the dataset into training and testing sets
 def split_data(df, train_size=0.8, random_state=42):
 
@@ -65,7 +62,7 @@ def compute_priors(train_df):
     for cls in classes:
         # count how many samples belong to the current class
         class_count = np.sum(train_df == cls)
-
+        
         # Calculate P(C) = (Count of Class) / (Total Samples)
         priors[cls] = class_count / total_samples
 
@@ -81,11 +78,10 @@ def GaussianPDF(x, mean, covariance):
     determinant = np.linalg.det(covariance)
     return spreadProb - 0.5 * np.log(determinant)
 
-
 def computeProbabilities(X, Y, X_test):
     priors, classes = compute_priors(Y)
     sigma = computeCovariance(X)
-
+    
     log_posteriors = {}
     for c in classes:
         mean_c = computeMean(X, Y, c)
@@ -95,18 +91,11 @@ def computeProbabilities(X, Y, X_test):
     # Returning dictionary of unnormalized log-posteriors
     return log_posteriors
 
-
 def predict(X_train, Y_train, X_test):
     X_test = np.atleast_2d(X_test)
     log_posteriors = computeProbabilities(X_train, Y_train, X_test)
-    predictions = np.array(
-        [
-            max(log_posteriors, key=lambda c: log_posteriors[c][i])
-            for i in range(X_test.shape[0])
-        ]
-    )
+    predictions = np.array([max(log_posteriors, key=lambda c: log_posteriors[c][i]) for i in range(X_test.shape[0])])
     return predictions, log_posteriors
-
 
 def evaluate(X_train, Y_train, X_test, Y_test):
     predictions, log_posteriors = predict(X_train, Y_train, X_test)
@@ -114,10 +103,9 @@ def evaluate(X_train, Y_train, X_test, Y_test):
     cm = confusion_matrix(Y_test, predictions)
     return accuracy, cm
 
-
 def main():
     # Load the dataset
-    df = load_clean_data("data/abalone.csv")
+    df = load_clean_data('data/abalone.csv')
 
     # Transform the target variable
     df = transform_target(df)
@@ -126,22 +114,22 @@ def main():
     train_df, test_df = split_data(df)
 
     # Separate features and target
-    X_train = train_df.drop(columns=["AgeGroup"]).values
-    Y_train = train_df["AgeGroup"].values
-    X_test = test_df.drop(columns=["AgeGroup"]).values
-    Y_test = test_df["AgeGroup"].values
+    X_train = train_df.drop(columns=['AgeGroup']).values
+    Y_train = train_df['AgeGroup'].values
+    X_test = test_df.drop(columns=['AgeGroup']).values
+    Y_test = test_df['AgeGroup'].values
 
     # Evaluate the model
     accuracy, cm = evaluate(X_train, Y_train, X_test, Y_test)
 
     # Print the results
-    print(f"Accuracy: {accuracy}")
-    print(f"Confusion Matrix:\n{cm}")
+    print(f'Accuracy: {accuracy}')
+    print(f'Confusion Matrix:\n{cm}')
 
     test = np.array([0.455, 0.365, 0.095, 0.514, 0.2245, 0.101, 0.15])
     predictions, log_posteriors = predict(X_train, Y_train, test)
-    print(predictions, log_posteriors)
+    print(predictions)
+    print(log_posteriors)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
