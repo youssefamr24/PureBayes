@@ -1,18 +1,16 @@
-def compute_mean(values):
-    values_mean = sum(values) / len(values)
-    return values_mean
+import numpy as np
 
-def compute_variance(values):
-    mean = compute_mean(values)
-    cumulative_sum = 0
-    for x in values:
-        cumulative_sum += (x - mean) ** 2
-    values_var = cumulative_sum / len(values)
-    return values_var
+def computeMean(X, Y, label):
+    data = X[Y == label]
+    mean = np.mean(data, axis=0)
+    return np.array(mean)
 
-def compute_accuracy(y_true, y_pred):
-    correct = 0
-    for i in range(len(y_true)):
-        if y_true[i] == y_pred[i]:
-            correct += 1
-    return correct / len(y_true)
+def computeCovariance(X):
+    data = X
+    covariance = np.cov(data,rowvar=False,bias=True)
+    epsilon = 1e-9
+    covariance += np.eye(covariance.shape[0]) * epsilon
+    return covariance
+
+def computeAccuracy(y_true, y_pred):
+    return np.mean(y_true == y_pred)
