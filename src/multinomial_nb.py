@@ -2,7 +2,7 @@ import os
 import re
 import math
 from collections import defaultdict, Counter
-
+from src.visualization import plot_top_words
 # -----------------------------
 # Stop Words (simple list)
 # -----------------------------
@@ -106,11 +106,14 @@ def accuracy(y_true, y_pred):
 # -----------------------------
 
 if __name__ == "__main__":
-    train_path = r"C:\Users\mosat\Desktop\CogA1\PureBayes\aclImdb\train"
-    test_path = r"C:\Users\mosat\Desktop\CogA1\PureBayes\aclImdb\test"
+    train_path = r"data\aclImdb\train"
+    test_path = r"data\aclImdb\test"
 
     print("Loading training data...")
     X_train, y_train = load_data(train_path)
+
+    # Plot top words
+    plot_top_words(X_train, y_train)
 
     print("Loading test data...")
     X_test, y_test = load_data(test_path)

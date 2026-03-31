@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import math
 from sklearn.metrics import confusion_matrix
-from utils import computeMean, computeCovariance, computeAccuracy
-
+from src.utils import computeMean, computeCovariance, computeAccuracy
+from src.visualization import plot_feature_distributions
 # Load the dataset
 def load_clean_data(file_path):
     df = pd.read_csv(file_path)
@@ -109,6 +109,9 @@ def main():
 
     # Transform the target variable
     df = transform_target(df)
+
+    # Plot feature distributions
+    plot_feature_distributions(df)
 
     # Split the dataset
     train_df, test_df = split_data(df)
